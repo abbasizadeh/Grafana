@@ -20,15 +20,15 @@ dta = as.data.table(dta)
 
 # creating date time column to identify the gaps
 # dta$DateTime <- chron(dates. = dta$date, times. = dta$time, format = c(dates = "Y-m-d", times = "h:m:s"))
-
 dta$DateTime <- as.POSIXct(paste(dta$date, dta$time), format="%Y-%m-%d %H:%M:%S", tz = "GMT")
 which(is.na(dta$DateTime))
 names(dta)
 # dta$DateTime <- as.Date(dta$DateTime)
+
 dta[,224]
 class(dta$DateTime)
 
-dta2 <- fill_gaps(dta, date_col = 224, frequency = "30 min", groups = "h2o_flux")
+dta2 <- fill_gaps(dta, date_col = 224, frequency = "30 min")
 saveRDS(dta, file = './output/Eddy_30_min.rds')
 
 

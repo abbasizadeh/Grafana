@@ -1,6 +1,7 @@
 library(data.table)
 library(ggplot2)
 library(rstudioapi)
+library(forecastML)
 
 setwd(dirname(getActiveDocumentContext()$path))
 getwd()
@@ -55,10 +56,20 @@ for(i in 1:length(FileNames)){
   Hladina_Brejl[[i]] <- Hladina_Brejl[[i]][,c('date','Time', 'ID','value')]
     }
 
+# Creating Half-Hour data
+for(i in 1:length(FileNames)){
+  # Creating Date + Time column
+  Hladina_Brejl[[i]]$DateTime <- as.POSIXct(paste(Hladina_Brejl[[i]]$date, Hladina_Brejl[[i]]$Time), format = "%Y-%m-%d %H:%M", tz = "GMT")
+  # selecting rounded times
+  BP <- Hladina_Brejl[[i]][5:length(Hladina_Brejl[[i]]$date)]
+  # Fill the gaps with NA values
+  BP <- fill_gaps(BP, date_col = 5, frequency = "30 min")
+  Hladina_Brejl[[i]] <- rbind(Hladina_Brejl[[i]][1:4], BP) 
+  }
 
-# checking the columns' configuration
-Hladina_Brejl[[1]]
-Hladina_Brejl[[4]]
+which(is.na(Hladina_Brejl[[4]]$date))
+Hladina_Brejl[[4]][1:20]
+head(Hladina_Brejl[[5]])
 
 # Createing data table for all data
 Hladina_Brejl_dt <- Hladina_Brejl[[1]]
@@ -66,8 +77,9 @@ for (i in 2:length(Hladina_Brejl)){
   Hladina_Brejl_dt <- rbind(Hladina_Brejl_dt, Hladina_Brejl[[i]])
 }
 
-
 saveRDS(Hladina_Brejl_dt, file = './output/Hladina_Brejl.rds')
+
+
 ################################################################################
 # Hladina_Brejl_Ofest
 
@@ -99,8 +111,21 @@ for(i in 1:length(FileNames)){
 
 
 # checking the columns' configuration
-Hladina_Brejl_Ofest[[1]]
-Hladina_Brejl_Ofest[[4]]
+Hladina_Brejl_Ofest[[2]][1:20]
+
+# Creating Half-Hour data
+for(i in 1:length(FileNames)){
+  # Creating Date + Time column
+  Hladina_Brejl_Ofest[[i]]$DateTime <- as.POSIXct(paste(Hladina_Brejl_Ofest[[i]]$date, Hladina_Brejl_Ofest[[i]]$Time), format = "%Y-%m-%d %H:%M", tz = "GMT")
+  # selecting rounded times
+  BP <- Hladina_Brejl_Ofest[[i]][7:length(Hladina_Brejl_Ofest[[i]]$date)]
+  # Fill the gaps with NA values
+  BP <- fill_gaps(BP, date_col = 5, frequency = "30 min")
+  Hladina_Brejl_Ofest[[i]] <- rbind(Hladina_Brejl_Ofest[[i]][1:6], BP) 
+}
+
+which(is.na(Hladina_Brejl_Ofest[[4]]$date))
+Hladina_Brejl_Ofest[[2]][1:20]
 
 # Createing data table for all data
 Hladina_Brejl_Ofest_dt <- Hladina_Brejl_Ofest[[1]]
@@ -143,6 +168,20 @@ for(i in 1:length(FileNames)){
 Prutok_Brejl[[1]]
 Prutok_Brejl[[4]]
 
+# Creating Half-Hour data
+for(i in 1:length(FileNames)){
+  # Creating Date + Time column
+  Prutok_Brejl[[i]]$DateTime <- as.POSIXct(paste(Prutok_Brejl[[i]]$date, Prutok_Brejl[[i]]$Time), format = "%Y-%m-%d %H:%M", tz = "GMT")
+  # selecting rounded times
+  BP <- Prutok_Brejl[[i]][7:length(Prutok_Brejl[[i]]$date)]
+  # Fill the gaps with NA values
+  BP <- fill_gaps(BP, date_col = 5, frequency = "30 min")
+  Prutok_Brejl[[i]] <- rbind(Prutok_Brejl[[i]][1:6], BP) 
+}
+
+which(is.na(Prutok_Brejl[[5]]$date))
+Prutok_Brejl[[5]][1:20]
+
 # Createing data table for all data
 Prutok_Brejl_dt <- Prutok_Brejl[[1]]
 for (i in 2:length(Prutok_Brejl)){
@@ -184,6 +223,21 @@ for(i in 1:length(FileNames)){
 Water_Temperature[[1]]
 Water_Temperature[[4]]
 
+
+# Creating Half-Hour data
+for(i in 1:length(FileNames)){
+  # Creating Date + Time column
+  Water_Temperature[[i]]$DateTime <- as.POSIXct(paste(Water_Temperature[[i]]$date, Water_Temperature[[i]]$Time), format = "%Y-%m-%d %H:%M", tz = "GMT")
+  # selecting rounded times
+  BP <- Water_Temperature[[i]][7:length(Water_Temperature[[i]]$date)]
+  # Fill the gaps with NA values
+  BP <- fill_gaps(BP, date_col = 5, frequency = "30 min")
+  Water_Temperature[[i]] <- rbind(Water_Temperature[[i]][1:6], BP) 
+}
+
+which(is.na(Water_Temperature[[4]]$date))
+Water_Temperature[[4]][1:20]
+
 # Createing data table for all data
 Water_Temperature_dt <- Water_Temperature[[1]]
 for (i in 2:length(Water_Temperature)){
@@ -209,7 +263,7 @@ Temperature <- lapply(FilePath, read.csv)
 Temperature <- lapply(Temperature, as.data.table)
 
 # extracting the sensors' IDs
-Name <- substring(FileNames, 24)
+Name <- substring(FileNames, 18)
 Name <- substr(Name, start =  1, stop =  nchar(Name)-4)
 
 for(i in 1:length(FileNames)){
@@ -225,6 +279,20 @@ for(i in 1:length(FileNames)){
 Temperature[[1]]
 Temperature[[4]]
 
+# Creating Half-Hour data
+for(i in 1:length(FileNames)){
+  # Creating Date + Time column
+  Temperature[[i]]$DateTime <- as.POSIXct(paste(Temperature[[i]]$date, Temperature[[i]]$Time), format = "%Y-%m-%d %H:%M", tz = "GMT")
+  # selecting rounded times
+  BP <- Temperature[[i]][7:length(Temperature[[i]]$date)]
+  # Fill the gaps with NA values
+  BP <- fill_gaps(BP, date_col = 5, frequency = "30 min")
+  Water_Temperature[[i]] <- rbind(Temperature[[i]][1:6], BP) 
+}
+
+which(is.na(Temperature[[4]]$date))
+Temperature[[4]][1:20]
+
 # Createing data table for all data
 Temperature_dt <- Temperature[[1]]
 for (i in 2:length(Temperature)){
@@ -233,35 +301,13 @@ for (i in 2:length(Temperature)){
 
 saveRDS(Temperature_dt, file = './output/Temperature.rds')
 
-# calculating mean value of sub-daily time scale
-# GW_TSs_daily <- list()
-# for (i in 1:length(GW_TSs)) {
-#   GW_TSs_daily[[i]] <- GW_TSs[[i]][, mean(value), by = .(day, month, year, ID)]
-#   GW_TSs_daily[[i]]$date <- as.Date(with(GW_TSs_daily[[i]], paste(year, month, day,sep="-")), "%Y-%m-%d")
-#   GW_TSs_daily[[i]]$day <- NULL
-#   GW_TSs_daily[[i]]$month <- NULL
-#   GW_TSs_daily[[i]]$year <- NULL
-#   names(GW_TSs_daily[[i]]) <- c('ID', 'value', 'date')
-# }
 
 
-# plotting 
-dta <- data.frame(Hladina_Brejl_Ofest[[1]])
-for (i in 2:5){
-  dta <- rbind(dta ,data.frame(Hladina_Brejl_Ofest[[i]])) 
-}
-
-ggplot(data = dta) + geom_line(aes(x = date, y = value)) + facet_wrap(~ID, ncol = 5) 
-
-ggplot(data = dta) + geom_line(aes(x = date, y = value, color = ID)) + 
-  theme(legend.position="none")
 
 
-GW_TS <- data.table(Hladina_Brejl[[5]])
-p <- ggplot() + geom_line(data = GW_TS, aes(x = date, y = value)) +
-  ggtitle(paste0('Sensor ', as.character(5)))
-# ggsave(filename = paste0(j, '.png'), plot = p, path = "C:/Users/Hossein/OneDrive/Desktop/R/Sensors/New sensors/",
-#        width = 30, height = 15, units = 'cm')
 
 
-# Files <- gsub('-2022-08-28 ', '-', Files)
+
+
+
+
