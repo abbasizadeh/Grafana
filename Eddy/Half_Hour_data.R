@@ -3,6 +3,7 @@ library(data.table)
 library(ggplot2)
 library(chron)
 library(forecastML)
+library(imputeTS)
 
 setwd(dirname(getActiveDocumentContext()$path))
 getwd()
@@ -29,12 +30,14 @@ dta[,224]
 class(dta$DateTime)
 
 dta2 <- fill_gaps(dta, date_col = 224, frequency = "30 min")
+which(is.na(dta2$DateTime))
 saveRDS(dta, file = './output/Eddy_30_min.rds')
 
+Eddy_data <- readRDS('./output/Eddy_30_min.rds')
 
+ggplot_na_distribution(Eddy_data$h2o_flux)
+ggplot_na_distribution(Eddy_data$ET)
 
-
-
-t <- dta$DateTime[2] - dta$DateTime[1]
+# t <- dta$DateTime[2] - dta$DateTime[1]
 
 
