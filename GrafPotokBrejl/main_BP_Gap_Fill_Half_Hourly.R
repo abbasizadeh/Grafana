@@ -46,7 +46,8 @@ for (i in 2:length(Hladina_Brejl)){
 # ggplot_na_distribution(Hladina_Brejl[[1]]$value)
 # ggplot_na_gapsize(Hladina_Brejl[[1]]$value)
 
-saveRDS(Hladina_Brejl_dt, file = './output/Hladina_Brejl.rds')
+# saveRDS(Hladina_Brejl_dt, file = './output/Hladina_Brejl.rds')
+readRDS('./output/Hladina_Brejl.rds')
 
 ################################################################################
 # Hladina_Brejl_Ofest
@@ -79,7 +80,8 @@ for (i in 2:length(Hladina_Brejl_Ofest)){
   Hladina_Brejl_Ofest_dt <- rbind(Hladina_Brejl_Ofest_dt, Hladina_Brejl_Ofest[[i]])
 }
 
-saveRDS(Hladina_Brejl_Ofest_dt, file = './output/Hladina_Brejl_Ofest.rds')
+# saveRDS(Hladina_Brejl_Ofest_dt, file = './output/Hladina_Brejl_Ofest.rds')
+Hladina_Brejl_Ofest <- readRDS('./output/Hladina_Brejl_Ofest.rds')
 
 ################################################################################
 # Prutok_Brejl
@@ -112,7 +114,8 @@ for (i in 2:length(Prutok_Brejl)){
   Prutok_Brejl_dt <- rbind(Prutok_Brejl_dt, Prutok_Brejl[[i]])
 }
 
-saveRDS(Prutok_Brejl_dt, file = './output/Prutok_Brejl.rds')
+# saveRDS(Prutok_Brejl_dt, file = './output/Prutok_Brejl.rds')
+Prutok_Brejl <- readRDS('./output/Prutok_Brejl.rds')
 
 
 ################################################################################
@@ -145,6 +148,7 @@ for (i in 2:length(Temperature)){
 }
 
 saveRDS(Temperature_dt, file = './output/BP_Temperature.rds')
+BP_Temperature <- readRDS('./output/BP_Temperature.rds')
 
 ################################################################################
 
@@ -178,6 +182,7 @@ for (i in 2:length(Water_Temperature)){
 }
 
 saveRDS(Water_Temperature_dt, file = './output/BP_Water_Temperature.rds')
+BP_Water_Temperature <- readRDS('./output/BP_Water_Temperature.rds')
 
 
 # # Imputing missing values using mean value

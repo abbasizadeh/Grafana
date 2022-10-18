@@ -8,6 +8,7 @@ library(imputeTS)
 setwd(dirname(getActiveDocumentContext()$path))
 getwd()
 
+# EC data has two lines of headers
 name <- scan("./data/summary_report_2022-01-01_2022-10-04.txt", nlines = 1, what = character())
 # summary_data <- read.delim("./data/summary_report_2022-01-01_2022-10-04.txt")
 dta <- read.table("./data/summary_report_2022-01-01_2022-10-04.txt", skip = 2, header = FALSE)
@@ -31,12 +32,15 @@ class(dta$DateTime)
 
 dta2 <- fill_gaps(dta, date_col = 224, frequency = "30 min")
 which(is.na(dta2$DateTime))
-saveRDS(dta, file = './output/Eddy_30_min.rds')
+# saveRDS(dta, file = './output/Eddy_30_min.rds')
 
 Eddy_data <- readRDS('./output/Eddy_30_min.rds')
 
-ggplot_na_distribution(Eddy_data$h2o_flux)
+
+# ggplot_na_distribution(Eddy_data$h2o_flux)
 ggplot_na_distribution(Eddy_data$ET)
+ggplot_na_distribution(Eddy_data$LE)
+ggplot_na_distribution(Eddy_data$LE_scf)
 
 # t <- dta$DateTime[2] - dta$DateTime[1]
 
