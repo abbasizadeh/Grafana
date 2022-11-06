@@ -46,7 +46,8 @@ for (i in 2:length(Hladina_Karluv_Luh)){
 # ggplot_na_distribution(Hladina_Karluv_Luh[[1]]$value)
 # ggplot_na_gapsize(Hladina_Karluv_Luh[[1]]$value)
 
-saveRDS(Hladina_Karluv_Luh_dt, file = './output/Hladina_Karluv_Luh.rds')
+# saveRDS(Hladina_Karluv_Luh_dt, file = './output/Hladina_Karluv_Luh.rds')
+
 
 ################################################################################
 # Hladina_Karluv_Luh_ofest 
@@ -79,7 +80,8 @@ for (i in 2:length(Hladina_Karluv_Luh_ofest)){
   Hladina_Karluv_Luh_ofest_dt <- rbind(Hladina_Karluv_Luh_ofest_dt, Hladina_Karluv_Luh_ofest[[i]])
 }
 
-saveRDS(Hladina_Karluv_Luh_ofest_dt, file = './output/Hladina_Karluv_Luh_ofest.rds')
+# saveRDS(Hladina_Karluv_Luh_ofest_dt, file = './output/Hladina_Karluv_Luh_ofest.rds')
+
 
 ################################################################################
 # Prutok_Karluv_Luh
@@ -112,7 +114,8 @@ for (i in 2:length(Prutok_Karluv_Luh)){
   Prutok_Karluv_Luh_dt <- rbind(Prutok_Karluv_Luh_dt, Prutok_Karluv_Luh[[i]])
 }
 
-saveRDS(Prutok_Karluv_Luh_dt, file = './output/Prutok_Karluv_Luh.rds')
+# saveRDS(Prutok_Karluv_Luh_dt, file = './output/Prutok_Karluv_Luh.rds')
+
 
 ################################################################################
 # Temperature
@@ -145,7 +148,7 @@ for (i in 2:length(Temperature)){
   Temperature_dt <- rbind(Temperature_dt, Temperature[[i]])
 }
 
-saveRDS(Temperature_dt, file = './output/KL_Temperature.rds')
+# saveRDS(Temperature_dt, file = './output/KL_Temperature.rds')
 
 
 ################################################################################
@@ -179,8 +182,15 @@ for (i in 2:length(Water_Temperature)){
   Water_Temperature_dt <- rbind(Water_Temperature_dt, Water_Temperature[[i]])
 }
 
-saveRDS(Water_Temperature_dt, file = './output/KL_Water_Temperature.rds')
+# saveRDS(Water_Temperature_dt, file = './output/KL_Water_Temperature.rds')
 
+
+
+Hladina_Karluv_Luh <- readRDS('./output/Hladina_Karluv_Luh.rds')
+Hladina_Karluv_Luh_ofest <- readRDS('./output/Hladina_Karluv_Luh_ofest.rds')
+Prutok_Karluv_Luh <- readRDS('./output/Prutok_Karluv_Luh.rds')
+KL_Temperature <- readRDS('./output/KL_Temperature.rds')
+KL_Water_Temperature <- readRDS('./output/KL_Water_Temperature.rds')
 
 # # Imputing missing values using mean value
 # m1 <- na_mean(TIMESERIES)

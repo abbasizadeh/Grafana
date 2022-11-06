@@ -47,7 +47,7 @@ for (i in 2:length(Hladina_Brejl)){
 # ggplot_na_gapsize(Hladina_Brejl[[1]]$value)
 
 # saveRDS(Hladina_Brejl_dt, file = './output/Hladina_Brejl.rds')
-readRDS('./output/Hladina_Brejl.rds')
+
 
 ################################################################################
 # Hladina_Brejl_Ofest
@@ -81,7 +81,7 @@ for (i in 2:length(Hladina_Brejl_Ofest)){
 }
 
 # saveRDS(Hladina_Brejl_Ofest_dt, file = './output/Hladina_Brejl_Ofest.rds')
-Hladina_Brejl_Ofest <- readRDS('./output/Hladina_Brejl_Ofest.rds')
+
 
 ################################################################################
 # Prutok_Brejl
@@ -115,7 +115,7 @@ for (i in 2:length(Prutok_Brejl)){
 }
 
 # saveRDS(Prutok_Brejl_dt, file = './output/Prutok_Brejl.rds')
-Prutok_Brejl <- readRDS('./output/Prutok_Brejl.rds')
+
 
 
 ################################################################################
@@ -147,8 +147,8 @@ for (i in 2:length(Temperature)){
   Temperature_dt <- rbind(Temperature_dt, Temperature[[i]])
 }
 
-saveRDS(Temperature_dt, file = './output/BP_Temperature.rds')
-BP_Temperature <- readRDS('./output/BP_Temperature.rds')
+# saveRDS(Temperature_dt, file = './output/BP_Temperature.rds')
+
 
 ################################################################################
 
@@ -181,7 +181,14 @@ for (i in 2:length(Water_Temperature)){
   Water_Temperature_dt <- rbind(Water_Temperature_dt, Water_Temperature[[i]])
 }
 
-saveRDS(Water_Temperature_dt, file = './output/BP_Water_Temperature.rds')
+# saveRDS(Water_Temperature_dt, file = './output/BP_Water_Temperature.rds')
+
+
+
+Hladina_Brejl <- readRDS('./output/Hladina_Brejl.rds')
+Hladina_Brejl_Ofest <- readRDS('./output/Hladina_Brejl_Ofest.rds')
+Prutok_Brejl <- readRDS('./output/Prutok_Brejl.rds')
+BP_Temperature <- readRDS('./output/BP_Temperature.rds')
 BP_Water_Temperature <- readRDS('./output/BP_Water_Temperature.rds')
 
 

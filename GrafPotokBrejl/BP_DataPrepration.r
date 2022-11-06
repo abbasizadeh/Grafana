@@ -9,6 +9,7 @@ getwd()
 
 Folders <- list.files('./data') 
 
+# funciton to read the csv files
 read_csv_dir <- function(File, Folder){
   FilePath <- paste0(dirname(getActiveDocumentContext()$path), '/data')
   FileDir <- glue::glue('{FilePath}/{Folder}/{File}')
@@ -26,7 +27,6 @@ date_time_decom = function(x){
     x$date <- as.Date(x$Time)
     x$Time <- format(as.POSIXct(x$Time), format = '%H:%M')
   }
-  
   return(x)}
 
 ################################################################################
