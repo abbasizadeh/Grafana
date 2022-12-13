@@ -105,16 +105,16 @@ ggplot(ET_Month) + geom_line(aes(x = date, y = ET))
 # names(ET_30min) <- c("date", "DateTime", "ET")
 names(ET_Month) <- c("date", "ET")  #[mm+1hour-1]
 
-# Saving
-ET_30min[,"date"] <- NULL
-saveRDS(ET_30min, './output/ET_30min.rds')
-
-ET_Daily[, c("Week", "Month")] <- NULL
-saveRDS(ET_Daily, './output/ET_Daily.rds')
-
-saveRDS(ET_Weekly, './output/ET_Weekly.rds')
-
-saveRDS(ET_Month, './output/ET_Monthly.rds')
+# # Saving
+# ET_30min[,"date"] <- NULL
+# saveRDS(ET_30min, './output/ET_30min.rds')
+# 
+# ET_Daily[, c("Week", "Month")] <- NULL
+# saveRDS(ET_Daily, './output/ET_Daily.rds')
+# 
+# saveRDS(ET_Weekly, './output/ET_Weekly.rds')
+# 
+# saveRDS(ET_Month, './output/ET_Monthly.rds')
 
 
 # test 
@@ -133,12 +133,14 @@ ggplot(ET_Monthly) + geom_line(aes(x = date, y = ET))
 ################################################################################
 
 # 30 minute data
-Eddy_data <- readRDS('./output/Eddy_30_min.rds') |> as.data.table()
+Eddy_data <- readRDS('./output/Eddy_30_min.rds') |> 
+  as.data.table()
 # Replacing the negative values with NA
 
 Eddy_subset <- Eddy_data[ , .(date, 
                        DateTime, 
                        P_RAIN_1_1_1,
+                       air_temperature,
                        ET,
                        RH,
                        wind_speed, 
@@ -157,22 +159,23 @@ Eddy_subset <- Eddy_data[ , .(date,
                        TS_2_1_1, 
                        TS_3_1_1)]
 
+
 # Replace negative values by NA
 Eddy_subset[, `:=` (
   P_RAIN_1_1_1 = ifelse(P_RAIN_1_1_1 > 1, NA, P_RAIN_1_1_1),
   ET = ifelse(ET < 0, NA, ET),
-  RH = ifelse(RH <0, NA, RH),
+  RH = ifelse(RH < 0, NA, RH),
   wind_speed = ifelse(wind_speed < 0, NA, wind_speed),
-  LWIN_1_1_1 = ifelse(LWIN_1_1_1 <0, NA, LWIN_1_1_1),
-  LWOUT_1_1_1 = ifelse(LWOUT_1_1_1 <0, NA, LWOUT_1_1_1),
-  SWIN_1_1_1 = ifelse(SWIN_1_1_1 <0, NA, SWIN_1_1_1),
-  SWOUT_1_1_1 = ifelse(SWOUT_1_1_1 <0, NA, SWOUT_1_1_1),
-  RN_1_1_1 = ifelse(RN_1_1_1 <0, NA, RN_1_1_1),
-  LE = ifelse(LE <0, NA, LE),
-  H = ifelse(H <0, NA, H),
-  SHF_1_1_1 = ifelse(SHF_1_1_1 <0, NA, SHF_1_1_1),
-  SHF_2_1_1 = ifelse(SHF_2_1_1 <0, NA, SHF_2_1_1),
-  SHF_3_1_1 = ifelse(SHF_3_1_1 <0, NA, SHF_3_1_1)
+  LWIN_1_1_1 = ifelse(LWIN_1_1_1 < 0, NA, LWIN_1_1_1),
+  LWOUT_1_1_1 = ifelse(LWOUT_1_1_1 < 0, NA, LWOUT_1_1_1),
+  SWIN_1_1_1 = ifelse(SWIN_1_1_1 < 0, NA, SWIN_1_1_1),
+  SWOUT_1_1_1 = ifelse(SWOUT_1_1_1 < 0, NA, SWOUT_1_1_1),
+  # RN_1_1_1 = ifelse(RN_1_1_1 < 0, NA, RN_1_1_1),
+  LE = ifelse(LE < 0, NA, LE),
+  H = ifelse(H < 0, NA, H),
+  SHF_1_1_1 = ifelse(SHF_1_1_1 < 0, NA, SHF_1_1_1),
+  SHF_2_1_1 = ifelse(SHF_2_1_1 < 0, NA, SHF_2_1_1),
+  SHF_3_1_1 = ifelse(SHF_3_1_1 < 0, NA, SHF_3_1_1)
   )][, `:=` (TS_3_1_1 = ifelse(TS_1_1_1 > 320, NA, TS_1_1_1))]
 
 
@@ -180,6 +183,7 @@ Eddy_subset[, `:=` (
 # ggplot_na_distribution(Eddy_subset$H)
 # ggplot_na_distribution(Eddy_subset$RH)
 ggplot(Eddy_subset, aes(x = DateTime, y = P_RAIN_1_1_1)) + geom_line()
+ggplot(Eddy_subset, aes(x = DateTime, y = air_temperature)) + geom_line()
 ggplot(Eddy_subset, aes(x = DateTime, y = ET)) + geom_line()
 ggplot(Eddy_subset, aes(x = DateTime, y = RH)) + geom_line()
 ggplot(Eddy_subset, aes(x = DateTime, y = wind_speed)) + geom_line()
@@ -228,6 +232,19 @@ Eddy_subset_Daily <- Eddy_subset[, .(
 
 ggplot(Eddy_subset_Daily, aes(x = date, y = Prec)) + geom_line()
 ggplot(Eddy_subset_Daily, aes(x = date, y = ET)) + geom_line()
+
+
+# divide the Le, which should be in an energy unit such as W/m-2 by the latent 
+#heat of evaporation (i.e. the amount of energy required to evaporate 1g or 1ml of water) 
+#which is 2257 J/g . For example, if you have a total LE of 500 W/m-2 for one hour 
+#this would be 1800 000 J of energy (with watts equal to jouls per second). 
+#Enough to evaporate 798 g of water per m-2 (1800000/2257). 
+#This is equal to 0.798 mm of evaporation (1 kg H20 per m-2 = 1 mm)
+
+ggplot(Eddy_subset_Daily, aes(x = date, y = Latent_Heat_Flux)) + 
+  geom_line(aes(y = ET)) +
+  geom_line(aes(y = Latent_Heat_Flux/2257), color = "red")  # 
+
 ggplot(Eddy_subset_Daily, aes(x = date, y = Relative_Humidity)) + geom_line()
 ggplot(Eddy_subset_Daily, aes(x = date, y = Wind_Speed)) + geom_line()
 ggplot(Eddy_subset_Daily, aes(x = date, y = Lwave_in)) + geom_line()
@@ -236,7 +253,7 @@ ggplot(Eddy_subset_Daily, aes(x = date, y = Swave_in)) + geom_line()
 ggplot(Eddy_subset_Daily) + geom_line(aes(x = date, y = Swave_out))
 ggplot(Eddy_subset_Daily, aes(x = date, y = Net_Radiation)) + geom_line()
 ggplot(Eddy_subset_Daily, aes(x = date, y = Latent_Heat_Flux)) + geom_line()
-ggplot(Eddy_subset_Daily, aes(x = date, y = sensible_Heat)) + geom_line()
+ggplot(Eddy_subset_Daily, aes(x = date, y = sensible_Heat_Flux)) + geom_line()
 ggplot(Eddy_subset_Daily, aes(x = date, y = Soil_Heat_Flux_1)) + geom_line()
 ggplot(Eddy_subset_Daily, aes(x = date, y = Soil_Heat_Flux_2)) + geom_line()
 ggplot(Eddy_subset_Daily, aes(x = date, y = Soil_Heat_Flux_3)) + geom_line()
@@ -248,8 +265,21 @@ ggplot(Eddy_subset_Daily, aes(x = date, y = Soil_Temp_3)) + geom_line()
 # saveRDS(Eddy_subset_Daily, './output/Eddy_subset_Daily.rds')
 Eddy_subset_Daily <- readRDS('./output/Eddy_subset_Daily.rds')
 
-test <- Eddy_subset_Daily[, .(date, Net_Radiation, Lwave_in - Lwave_out + Swave_in - Swave_out, Soil_Heat_Flux_1 + Latent_Heat_Flux + sensible_Heat_Flux)]
+test <- Eddy_subset_Daily[, .(date, Net_Radiation, 
+                              Lwave_in - Lwave_out + Swave_in - Swave_out, 
+                              Soil_Heat_Flux_1 + Latent_Heat_Flux + sensible_Heat_Flux)]
 ggplot(test, aes(x = date)) + 
   geom_line(aes(y = Net_Radiation)) +
-  geom_line(aes(y = V3), color = "red") +
-  geom_line(aes(y = V4), color = "blue")
+  geom_line(aes(y = V3), color = "red", linetype = "dashed") +
+  geom_line(aes(y = V4), color = "blue") 
+  scale_color_manual(values = c("red"="Eddy" , "black" = "dHRUM" ))
+
+
+
+
+
+
+
+
+
+
