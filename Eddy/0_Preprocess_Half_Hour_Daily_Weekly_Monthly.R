@@ -7,18 +7,20 @@ library(imputeTS)
 library(stringr)
 library(zoo)
 
-setwd(dirname(getActiveDocumentContext()$path))
+# setwd(dirname(getActiveDocumentContext()$path))
 getwd()
+
+file_name <- list.files('./Eddy/data')
 
 # EC data has two lines of headers
 # name <- scan("./data/summary_report_2022-01-01_2022-10-04.txt", nlines = 1, what = character())
 # name <- scan("./data/summary_report_2020-01-01_2022-11-06.txt", nlines = 1, what = character())
-name <- scan("./data/summary_report_2020-01-01_2022-11-14.txt", nlines = 1, what = character())
-
+name <- scan(paste0("./Eddy/data/", file_name[1]), nlines = 1, what = character())
+tt <- fread(paste0("./Eddy/data/", file_name[1]))
 # summary_data <- read.delim("./data/summary_report_2022-01-01_2022-10-04.txt")
 # dta1 <- read.delim("./data/summary_report_2020-01-01_2022-11-14.txt")
 # head(dta1$P_RAIN_1_1_1)
-dta <- read.table("./data/summary_report_2020-01-01_2022-11-06.txt", skip = 2, header = FALSE) |>
+dta <- read.table(paste0("./Eddy/data/", file_name[1]), skip = 2, header = FALSE) %>%
   as.data.table()
 
 names(dta) <- name
@@ -53,7 +55,7 @@ subset_dta <- dta[min(which(dta$date == as.Date("2020-07-01"))):length(dta$date)
 
 
 # saveRDS(subset_dta, file = './output/Eddy_30_min.rds')
-Eddy_data <- readRDS('./output/Eddy_30_min.rds') |> as.data.table()
+Eddy_data <- readRDS('./Eddy/output/Eddy_30_min.rds') |> as.data.table()
 ggplot(Eddy_data, aes(x = DateTime, y = ET)) + geom_line()
 ###############################################################################
 
@@ -76,7 +78,8 @@ ggplot(ET_30min, aes(x = DateTime, y = ET)) + geom_line()
 ET_Daily <- ET_30min[, sum(ET, na.rm = TRUE), by = date]
 names(ET_Daily) <- c("date", "ET")
 # ggplot_na_distribution(ET_Daily$ET)
-ggplot(ET_Daily, aes(x = date, y = ET)) + geom_line()
+ggplot(ET_Daily, aes(x = date, y = ET)) + geom_line() +
+  labs(y = 'ET [mm]')
 
 # Weekly data
 Pre_weelly <- ET_Daily[, Week := week(date)]
@@ -118,17 +121,23 @@ names(ET_Month) <- c("date", "ET")  #[mm+1hour-1]
 
 
 # test 
-ET_30min <- readRDS('./output/ET_30min.rds')
-ggplot(ET_30min, aes(x = DateTime, y = ET)) + geom_line()
+ET_30min <- readRDS('./Eddy/output/ET_30min.rds')
+ggplot(ET_30min, aes(x = DateTime, y = ET)) + 
+  geom_line() +
+  labs(y = 'ET 30 min [mm]')
 
-ET_Daily <- readRDS('./output/ET_Daily.rds')
-ggplot(ET_Daily, aes(x = date, y = ET)) + geom_line()
+ET_Daily <- readRDS('./Eddy/output/ET_Daily.rds')
+ggplot(ET_Daily, aes(x = date, y = ET)) + 
+  geom_line()+
+  labs(y = 'ET daily [mm]')
 
-ET_Weekly <- readRDS('./output/ET_Weekly.rds')
-ET_Weekly |> ggplot() +  geom_line(aes(x = date, y = ET))
+ET_Weekly <- readRDS('./Eddy/output/ET_Weekly.rds')
+ET_Weekly |> ggplot() +  geom_line(aes(x = date, y = ET)) +
+  labs(y = 'ET weekly [mm]')
 
-ET_Monthly <- readRDS('./output/ET_Monthly.rds')
-ggplot(ET_Monthly) + geom_line(aes(x = date, y = ET))
+ET_Monthly <- readRDS('./Eddy/output/ET_Monthly.rds')
+ggplot(ET_Monthly) + geom_line(aes(x = date, y = ET)) +
+  labs(y = 'ET monthly [mm]')
 
 
 

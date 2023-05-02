@@ -324,7 +324,9 @@ ggplot(Eddy_subset_Daily,
     size = 0.8,
     color  = "red"
   ) +
-  labs(x = "NetRad", y = "WaveIn - WaveOut")
+  labs(x = "NetRad", y = "WaveIn - WaveOut") +
+  xlim(c(0, 30)) +
+  ylim(c(0, 30))
 
 
 
