@@ -3,11 +3,11 @@ library(ggplot2)
 library(rstudioapi)
 
 
-setwd(dirname(getActiveDocumentContext()$path))
+dirname(getActiveDocumentContext()$path)
 getwd()
 
 
-Folders <- list.files('./data') 
+Folders <- list.files('./GrafPotokKarluvLuh/data') 
 
 read_csv_dir <- function(File, Folder){
   FilePath <- paste0(dirname(getActiveDocumentContext()$path), '/data')
@@ -33,7 +33,7 @@ date_time_decom = function(x){
 # Hladina Karlův Luh
 
 # The directory of the downloaded csv file
-FileNames <- list.files(paste0('./data/', Folders[1])) 
+FileNames <- list.files(paste0('./GrafPotokKarluvLuh/data/', Folders[1])) 
 
 FilePath <- list()
 for (i in 1:length(FileNames)){
@@ -67,7 +67,7 @@ for(i in 1:length(FileNames)){
 # Hladina_Karluv_Luh_ofest 
 
 # The directory of the downloaded csv file
-FileNames <- list.files(paste0('./data/', Folders[2])) 
+FileNames <- list.files(paste0('./GrafPotokKarluvLuh/data/', Folders[2])) 
 
 FilePath <- list()
 for (i in 1:length(FileNames)){
@@ -96,7 +96,7 @@ for(i in 1:length(FileNames)){
 ################################################################################
 # Prutok_Karluv_Luh
 # The directory of the downloaded csv file
-FileNames <- list.files(paste0('./data/', Folders[3])) 
+FileNames <- list.files(paste0('./GrafPotokKarluvLuh/data/', Folders[3])) 
 
 FilePath <- list()
 for (i in 1:length(FileNames)){
@@ -128,7 +128,7 @@ for(i in 1:length(FileNames)){
 # Temperature
 
 # The directory of the downloaded csv file
-FileNames <- list.files(paste0('./data/', Folders[4])) 
+FileNames <- list.files(paste0('./GrafPotokKarluvLuh/data/', Folders[4])) 
 
 FilePath <- list()
 for (i in 1:length(FileNames)){
@@ -148,7 +148,7 @@ for(i in 1:length(FileNames)){
   Temperature[[i]]$ID <- rep(Name[i], length(Temperature[[i]]$Time))
   
   names(Temperature[[i]]) <- c('Time','value', 'date', 'ID')
-  Temperature[[i]] <- Temperature[[i]][,c('date','Time', 'ID','value')]
+  Temperature[[i]] <- Temperature[[i]][, c('date','Time', 'ID','value')]
 }
 
 # checking the columns' configuration
@@ -159,7 +159,7 @@ for(i in 1:length(FileNames)){
 # Water_Temperature
 
 # The directory of the downloaded csv file
-FileNames <- list.files(paste0('./data/', Folders[5])) 
+FileNames <- list.files(paste0('./GrafPotokKarluvLuh/data/', Folders[5])) 
 
 FilePath <- list()
 for (i in 1:length(FileNames)){

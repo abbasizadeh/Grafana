@@ -15,12 +15,12 @@ file_name <- list.files('./Eddy/data')
 # EC data has two lines of headers
 # name <- scan("./data/summary_report_2022-01-01_2022-10-04.txt", nlines = 1, what = character())
 # name <- scan("./data/summary_report_2020-01-01_2022-11-06.txt", nlines = 1, what = character())
-name <- scan(paste0("./Eddy/data/", file_name[1]), nlines = 1, what = character())
-tt <- fread(paste0("./Eddy/data/", file_name[1]))
+name <- scan(paste0("./Eddy/data/", file_name[2]), nlines = 1, what = character())
+tt <- fread(paste0("./Eddy/data/", file_name[2]))
 # summary_data <- read.delim("./data/summary_report_2022-01-01_2022-10-04.txt")
 # dta1 <- read.delim("./data/summary_report_2020-01-01_2022-11-14.txt")
 # head(dta1$P_RAIN_1_1_1)
-dta <- read.table(paste0("./Eddy/data/", file_name[1]), skip = 2, header = FALSE) %>%
+dta <- read.table(paste0("./Eddy/data/", file_name[2]), skip = 2, header = FALSE) %>%
   as.data.table()
 
 names(dta) <- name
@@ -67,7 +67,7 @@ ggplot_na_distribution(Eddy_data$ET)
 # ET data 
 # 30 minute data
 # Replacing the negative values with NA
-ET_30min <- Eddy_data[ , .(date, DateTime, ET)][, ET := ET * 0.5][, ET:= ifelse(ET <0, NA, ET)]
+ET_30min <- Eddy_data[ , .(date, DateTime, ET)][, ET := ET * 0.5][, ET:= ifelse(ET < 0, NA, ET)]
 # ggplot_na_distribution(ET_30min$ET)
 ggplot(ET_30min, aes(x = DateTime, y = ET)) + geom_line()
 

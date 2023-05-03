@@ -7,13 +7,13 @@ library(imputeTS)
 library(stringr)
 library(zoo)
 
-setwd(dirname(getActiveDocumentContext()$path))
+# setwd(dirname(getActiveDocumentContext()$path))
 getwd()
 
 
 
 # 30 minute data
-Eddy_data <- readRDS('./output/Eddy_30_min.rds') |> 
+Eddy_data <- readRDS('./Eddy/output/Eddy_30_min.rds') |> 
   as.data.table()
 
 
@@ -292,7 +292,7 @@ ggplot(Eddy_subset_Daily,
 
 # saveRDS(Eddy_subset_Daily, './output/Eddy_subset_Daily.rds')
 
-Eddy_subset_Daily <- readRDS('./output/Eddy_subset_Daily.rds')
+Eddy_subset_Daily <- readRDS('./Eddy/output/Eddy_subset_Daily.rds')
 
 test <- Eddy_subset_Daily[, 
                           .(date, Net_Radiation, 
@@ -312,7 +312,11 @@ ggplot(test, aes(x = date)) +
                                 "SoilHeat+LatentHeat+SensibleHeat" = "blue" )) +
   theme(legend.position = "bottom", 
         legend.title = element_blank()) + 
-  labs(x = "date [day]", y = "NetRad [MJ m^-2 day^-1]")
+  labs(x = "date [day]", y = "NetRad [MJ m^-2 day^-1]") +
+  theme_bw() + 
+  theme(
+    legend.position = 'bottom'
+  )
 
 
 ggplot(Eddy_subset_Daily,

@@ -2,3 +2,9 @@
 .Rhistory
 .RData
 .Ruserdata
+/Eddy/data/*
+/Eddy/output/*
+/GrafPotokBrej/data/*
+/GrafPotokBrej/output/*
+/GrafPotokKarluvLuh/data/*
+/GrafPotokKarluvLuh/output/*

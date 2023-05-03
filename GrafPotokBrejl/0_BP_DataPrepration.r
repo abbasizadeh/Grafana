@@ -3,11 +3,11 @@ library(ggplot2)
 library(rstudioapi)
 library(forecastML)
 
-setwd(dirname(getActiveDocumentContext()$path))
+dirname(getActiveDocumentContext()$path)
 getwd()
 
 
-Folders <- list.files('./data') 
+Folders <- list.files('./GrafPotokBrejl/data') 
 
 # funciton to read the csv files
 read_csv_dir <- function(File, Folder){
@@ -33,7 +33,7 @@ date_time_decom = function(x){
 # Hladina Brejl
 
 # The directory of the downloaded csv file
-FileNames <- list.files(paste0('./data/', Folders[1])) 
+FileNames <- list.files(paste0('./GrafPotokBrejl/data/', Folders[1])) 
 
 FilePath <- list()
 for (i in 1:length(FileNames)){
@@ -60,7 +60,7 @@ for(i in 1:length(FileNames)){
 # Hladina_Brejl_Ofest
 
 # The directory of the downloaded csv file
-FileNames <- list.files(paste0('./data/', Folders[2])) 
+FileNames <- list.files(paste0('./GrafPotokBrejl/data/', Folders[2])) 
 
 FilePath <- list()
 for (i in 1:length(FileNames)){
@@ -92,7 +92,7 @@ for(i in 1:length(FileNames)){
 # Prutok_Brejl
 
 # The directory of the downloaded csv file
-FileNames <- list.files(paste0('./data/', Folders[3])) 
+FileNames <- list.files(paste0('./GrafPotokBrejl/data/', Folders[3])) 
 
 FilePath <- list()
 for (i in 1:length(FileNames)){
@@ -120,7 +120,7 @@ for(i in 1:length(FileNames)){
 # Temperature
 
 # The directory of the downloaded csv file
-FileNames <- list.files(paste0('./data/', Folders[4])) 
+FileNames <- list.files(paste0('./GrafPotokBrejl/data/', Folders[4])) 
 
 FilePath <- list()
 for (i in 1:length(FileNames)){
@@ -149,7 +149,7 @@ for(i in 1:length(FileNames)){
 # Water_Temperature
 
 # The directory of the downloaded csv file
-FileNames <- list.files(paste0('./data/', Folders[5])) 
+FileNames <- list.files(paste0('./GrafPotokBrejl/data/', Folders[5])) 
 
 FilePath <- list()
 for (i in 1:length(FileNames)){

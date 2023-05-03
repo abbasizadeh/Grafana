@@ -3,124 +3,125 @@ library(forecastML)
 library(imputeTS)
 
 
-setwd(dirname(getActiveDocumentContext()$path))
+dirname(getActiveDocumentContext()$path)
 getwd()
 
-source(paste0(dirname(getActiveDocumentContext()$path), '/DataPrepration.r'))
+source(paste0(dirname(getActiveDocumentContext()$path), './GrafPotokBrejl/BP_DataPrepration.r'))
 
 
 ################################################################################
-# Hladina Karlův Luh
-FileNames <- list.files(paste0('./data/', Folders[1])) 
+# Hladina Brejl
+
 # Creating Half-Hourly sequence using forecastML  
+FileNames <- list.files(paste0('./GrafPotokBrejl/data/', Folders[1])) 
 for(i in 1:length(FileNames)){
   # Creating Date + Time column
-  Hladina_Karluv_Luh[[i]]$DateTime <- as.POSIXct(paste(Hladina_Karluv_Luh[[i]]$date, Hladina_Karluv_Luh[[i]]$Time), format = "%Y-%m-%d %H:%M", tz = "GMT")
+  Hladina_Brejl[[i]]$DateTime <- as.POSIXct(paste(Hladina_Brejl[[i]]$date, Hladina_Brejl[[i]]$Time), format = "%Y-%m-%d %H:%M", tz = "GMT")
   # selecting rounded times
-  BP <- Hladina_Karluv_Luh[[i]][5:length(Hladina_Karluv_Luh[[i]]$date)]
+  BP <- Hladina_Brejl[[i]][5:length(Hladina_Brejl[[i]]$date)]
   # Fill the gaps with NA values
   BP <- fill_gaps(BP, date_col = 5, frequency = "30 min")
-  Hladina_Karluv_Luh[[i]] <- rbind(Hladina_Karluv_Luh[[i]][1:4], BP) 
+  Hladina_Brejl[[i]] <- rbind(Hladina_Brejl[[i]][1:4], BP) 
 }
 
-# which(is.na(Hladina_Karluv_Luh[[3]]$date))
-# Hladina_Karluv_Luh[[2]][1:30]
+# which(is.na(Hladina_Brejl[[3]]$date))
+# Hladina_Brejl[[2]][1:30]
 
 # Missing data imputation using imputeTS package and kalman method
-for(i in 1:length(Hladina_Karluv_Luh)){
-  Hladina_Karluv_Luh[[i]]$Complete_value <- na_kalman(Hladina_Karluv_Luh[[i]]$value)
+for(i in 1:length(Hladina_Brejl)){
+  Hladina_Brejl[[i]]$Complete_value <- na_kalman(Hladina_Brejl[[i]]$value)
 }
 
-ggplot_na_imputations(Hladina_Karluv_Luh[[1]]$value, Hladina_Karluv_Luh[[1]]$Complete_value)
+ggplot_na_imputations(Hladina_Brejl[[1]]$value, Hladina_Brejl[[1]]$Complete_value)
 # plot(m4[1:100], type = "l") 
 
 
 # Createing data table for all data
-Hladina_Karluv_Luh_dt <- Hladina_Karluv_Luh[[1]]
-for (i in 2:length(Hladina_Karluv_Luh)){
-  Hladina_Karluv_Luh_dt <- rbind(Hladina_Karluv_Luh_dt, Hladina_Karluv_Luh[[i]])
+Hladina_Brejl_dt <- Hladina_Brejl[[1]]
+for (i in 2:length(Hladina_Brejl)){
+  Hladina_Brejl_dt <- rbind(Hladina_Brejl_dt, Hladina_Brejl[[i]])
 }
 
 
+# ggplot_na_distribution(Hladina_Brejl[[1]]$value)
+# ggplot_na_gapsize(Hladina_Brejl[[1]]$value)
 
-# ggplot_na_distribution(Hladina_Karluv_Luh[[1]]$value)
-# ggplot_na_gapsize(Hladina_Karluv_Luh[[1]]$value)
-
-# saveRDS(Hladina_Karluv_Luh_dt, file = './output/Hladina_Karluv_Luh.rds')
+# saveRDS(Hladina_Brejl_dt, file = './output/Hladina_Brejl.rds')
 
 
 ################################################################################
-# Hladina_Karluv_Luh_ofest 
+# Hladina_Brejl_Ofest
 
-FileNames <- list.files(paste0('./data/', Folders[2])) 
+FileNames <- list.files(paste0('./GrafPotokBrejl/data/', Folders[2])) 
 # Creating Half-Hour data
 for(i in 1:length(FileNames)){
   # Creating Date + Time column
-  Hladina_Karluv_Luh_ofest[[i]]$DateTime <- as.POSIXct(paste(Hladina_Karluv_Luh_ofest[[i]]$date, Hladina_Karluv_Luh_ofest[[i]]$Time), format = "%Y-%m-%d %H:%M", tz = "GMT")
+  Hladina_Brejl_Ofest[[i]]$DateTime <- as.POSIXct(paste(Hladina_Brejl_Ofest[[i]]$date, Hladina_Brejl_Ofest[[i]]$Time), format = "%Y-%m-%d %H:%M", tz = "GMT")
   # selecting rounded times
-  BP <- Hladina_Karluv_Luh_ofest[[i]][5:length(Hladina_Karluv_Luh_ofest[[i]]$date)]
+  BP <- Hladina_Brejl_Ofest[[i]][5:length(Hladina_Brejl_Ofest[[i]]$date)]
   # Fill the gaps with NA values
   BP <- fill_gaps(BP, date_col = 5, frequency = "30 min")
-  Hladina_Karluv_Luh_ofest[[i]] <- rbind(Hladina_Karluv_Luh_ofest[[i]][1:4], BP) 
+  Hladina_Brejl_Ofest[[i]] <- rbind(Hladina_Brejl_Ofest[[i]][1:4], BP) 
 }
 
-# which(is.na(Hladina_Karluv_Luh_ofest[[3]]$date))
-# Hladina_Karluv_Luh_ofest[[3]][1:20]
+# which(is.na(Hladina_Brejl_Ofest[[3]]$date))
+# Hladina_Brejl_Ofest[[3]][1:20]
 
 # Missing data imputation using imputeTS package and kalman method
-for(i in 1:length(Hladina_Karluv_Luh_ofest)){
-  Hladina_Karluv_Luh_ofest[[i]]$Complete_value <- na_kalman(Hladina_Karluv_Luh_ofest[[i]]$value)
+for(i in 1:length(Hladina_Brejl_Ofest)){
+  Hladina_Brejl_Ofest[[i]]$Complete_value <- na_kalman(Hladina_Brejl_Ofest[[i]]$value)
 }
 
-ggplot_na_imputations(Hladina_Karluv_Luh_ofest[[1]]$value[1:150], Hladina_Karluv_Luh_ofest[[1]]$Complete_value[1:150])
+ggplot_na_imputations(Hladina_Brejl_Ofest[[1]]$value, Hladina_Brejl_Ofest[[1]]$Complete_value)
 
 # Createing data table for all data
-Hladina_Karluv_Luh_ofest_dt <- Hladina_Karluv_Luh_ofest[[1]]
-for (i in 2:length(Hladina_Karluv_Luh_ofest)){
-  Hladina_Karluv_Luh_ofest_dt <- rbind(Hladina_Karluv_Luh_ofest_dt, Hladina_Karluv_Luh_ofest[[i]])
+Hladina_Brejl_Ofest_dt <- Hladina_Brejl_Ofest[[1]]
+for (i in 2:length(Hladina_Brejl_Ofest)){
+  Hladina_Brejl_Ofest_dt <- rbind(Hladina_Brejl_Ofest_dt, Hladina_Brejl_Ofest[[i]])
 }
 
-# saveRDS(Hladina_Karluv_Luh_ofest_dt, file = './output/Hladina_Karluv_Luh_ofest.rds')
+# saveRDS(Hladina_Brejl_Ofest_dt, file = './GrafPotokBrejl/output/Hladina_Brejl_Ofest.rds')
 
 
 ################################################################################
-# Prutok_Karluv_Luh
+# Prutok_Brejl
 
-FileNames <- list.files(paste0('./data/', Folders[3])) 
+FileNames <- list.files(paste0('./GrafPotokBrejl/data/', Folders[3])) 
 # Creating Half-Hour data
 for(i in 1:length(FileNames)){
   # Creating Date + Time column
-  Prutok_Karluv_Luh[[i]]$DateTime <- as.POSIXct(paste(Prutok_Karluv_Luh[[i]]$date, Prutok_Karluv_Luh[[i]]$Time), format = "%Y-%m-%d %H:%M", tz = "GMT")
+  Prutok_Brejl[[i]]$DateTime <- as.POSIXct(paste(Prutok_Brejl[[i]]$date, Prutok_Brejl[[i]]$Time), format = "%Y-%m-%d %H:%M", tz = "GMT")
   # selecting rounded times
-  BP <- Prutok_Karluv_Luh[[i]][5:length(Prutok_Karluv_Luh[[i]]$date)]
+  BP <- Prutok_Brejl[[i]][5:length(Prutok_Brejl[[i]]$date)]
   # Fill the gaps with NA values
   BP <- fill_gaps(BP, date_col = 5, frequency = "30 min")
-  Prutok_Karluv_Luh[[i]] <- rbind(Prutok_Karluv_Luh[[i]][1:4], BP) 
+  Prutok_Brejl[[i]] <- rbind(Prutok_Brejl[[i]][1:4], BP) 
 }
 
-# which(is.na(Prutok_Karluv_Luh[[3]]$date))
-# Prutok_Karluv_Luh[[2]][1:20]
+# which(is.na(Prutok_Brejl[[3]]$date))
+# Prutok_Brejl[[2]][1:20]
 
 # Missing data imputation using imputeTS package and kalman method
-for(i in 1:length(Prutok_Karluv_Luh)){
-  Prutok_Karluv_Luh[[i]]$Complete_value <- na_kalman(Prutok_Karluv_Luh[[i]]$value)
+for(i in 1:length(Prutok_Brejl)){
+  Prutok_Brejl[[i]]$Complete_value <- na_kalman(Prutok_Brejl[[i]]$value)
 }
 
-ggplot_na_imputations(Prutok_Karluv_Luh[[1]]$value[1:150], Prutok_Karluv_Luh[[1]]$Complete_value[1:150])
+ggplot_na_imputations(Prutok_Brejl[[1]]$value, Prutok_Brejl[[1]]$Complete_value)
 
 # Createing data table for all data
-Prutok_Karluv_Luh_dt <- Prutok_Karluv_Luh[[1]]
-for (i in 2:length(Prutok_Karluv_Luh)){
-  Prutok_Karluv_Luh_dt <- rbind(Prutok_Karluv_Luh_dt, Prutok_Karluv_Luh[[i]])
+Prutok_Brejl_dt <- Prutok_Brejl[[1]]
+for (i in 2:length(Prutok_Brejl)){
+  Prutok_Brejl_dt <- rbind(Prutok_Brejl_dt, Prutok_Brejl[[i]])
 }
 
-# saveRDS(Prutok_Karluv_Luh_dt, file = './output/Prutok_Karluv_Luh.rds')
+# saveRDS(Prutok_Brejl_dt, file = './GrafPotokBrejl/output/Prutok_Brejl.rds')
+
 
 
 ################################################################################
 # Temperature
 
-FileNames <- list.files(paste0('./data/', Folders[4])) 
+FileNames <- list.files(paste0('./GrafPotokBrejl/data/', Folders[4])) 
 # Creating Half-Hour data
 for(i in 1:length(FileNames)){
   # Creating Date + Time column
@@ -140,21 +141,19 @@ for(i in 1:length(Temperature)){
   Temperature[[i]]$Complete_value <- na_kalman(Temperature[[i]]$value)
 }
 
-ggplot_na_imputations(Temperature[[1]]$value[1:150], Temperature[[1]]$Complete_value[1:150])
-
 # Createing data table for all data
 Temperature_dt <- Temperature[[1]]
 for (i in 2:length(Temperature)){
   Temperature_dt <- rbind(Temperature_dt, Temperature[[i]])
 }
 
-# saveRDS(Temperature_dt, file = './output/KL_Temperature.rds')
+# saveRDS(Temperature_dt, file = './GrafPotokBrejl/output/BP_Temperature.rds')
 
 
 ################################################################################
-# Water_Temperature
 
-FileNames <- list.files(paste0('./data/', Folders[5])) 
+# Water_Temperature
+FileNames <- list.files(paste0('./GrafPotokBrejl/data/', Folders[5])) 
 # Creating Half-Hour data
 for(i in 1:length(FileNames)){
   # Creating Date + Time column
@@ -174,7 +173,7 @@ for(i in 1:length(Water_Temperature)){
   Water_Temperature[[i]]$Complete_value <- na_kalman(Water_Temperature[[i]]$value)
 }
 
-ggplot_na_imputations(Water_Temperature[[1]]$value[1:150], Water_Temperature[[1]]$Complete_value[1:150])
+ggplot_na_imputations(Water_Temperature[[1]]$value, Water_Temperature[[1]]$Complete_value)
 
 # Createing data table for all data
 Water_Temperature_dt <- Water_Temperature[[1]]
@@ -182,15 +181,16 @@ for (i in 2:length(Water_Temperature)){
   Water_Temperature_dt <- rbind(Water_Temperature_dt, Water_Temperature[[i]])
 }
 
-# saveRDS(Water_Temperature_dt, file = './output/KL_Water_Temperature.rds')
+# saveRDS(Water_Temperature_dt, file = './GrafPotokBrejl/output/BP_Water_Temperature.rds')
 
 
 
-Hladina_Karluv_Luh <- readRDS('./output/Hladina_Karluv_Luh.rds')
-Hladina_Karluv_Luh_ofest <- readRDS('./output/Hladina_Karluv_Luh_ofest.rds')
-Prutok_Karluv_Luh <- readRDS('./output/Prutok_Karluv_Luh.rds')
-KL_Temperature <- readRDS('./output/KL_Temperature.rds')
-KL_Water_Temperature <- readRDS('./output/KL_Water_Temperature.rds')
+Hladina_Brejl <- readRDS('./GrafPotokBrejl/output/Hladina_Brejl.rds')
+Hladina_Brejl_Ofest <- readRDS('./GrafPotokBrejl/output/Hladina_Brejl_Ofest.rds')
+Prutok_Brejl <- readRDS('./GrafPotokBrejl/output/Prutok_Brejl.rds')
+BP_Temperature <- readRDS('./GrafPotokBrejl/output/BP_Temperature.rds')
+BP_Water_Temperature <- readRDS('./GrafPotokBrejl/output/BP_Water_Temperature.rds')
+
 
 # # Imputing missing values using mean value
 # m1 <- na_mean(TIMESERIES)
